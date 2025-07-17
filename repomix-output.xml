@@ -1,0 +1,1647 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+app/
+  api/
+    agent-action/
+      route.ts
+    world-state/
+      route.ts
+  AgentActionsModal.tsx
+  Cell.tsx
+  GameStates.ts
+  globals.css
+  layout.tsx
+  OverlayTextarea.tsx
+  page.tsx
+  World.ts
+components/
+  ui/
+    dialog.tsx
+lib/
+  utils.ts
+public/
+  file.svg
+  globe.svg
+  next.svg
+  vercel.svg
+  window.svg
+.gitignore
+components.json
+eslint.config.mjs
+next.config.ts
+package.json
+postcss.config.mjs
+README.md
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="app/AgentActionsModal.tsx">
+import { Agent } from "./World";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+
+interface AgentAction {
+  agent: Agent;
+  action: string;
+}
+
+interface AgentActionsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  agentActions: AgentAction[];
+  isWorldGenerating: boolean;
+}
+
+const AgentActionsModal = ({
+  isOpen,
+  onClose,
+  agentActions,
+  isWorldGenerating,
+}: AgentActionsModalProps) => {
+  const [selectedAgentIndex, setSelectedAgentIndex] = useState(0);
+
+  const selectedAgent = agentActions[selectedAgentIndex];
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="border border-black bg-white rounded-none h-[500px] max-w-[800px]">
+        <DialogHeader>
+          <DialogTitle className="text-sm font-normal text-gray-500">
+            AGENT ACTIONS
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="mt-4 flex h-[400px]">
+          {/* Left side - Agent list */}
+          <div className="w-1/3 border-r border-gray-500 flex flex-col">
+            <div className="text-xs text-gray-500 mb-2 px-2 flex-shrink-0">AGENTS</div>
+            <div className="flex-1 overflow-y-auto">
+              <div className="space-y-1">
+                {agentActions.map((agentAction, index) => (
+                  <div
+                    key={agentAction.agent.name}
+                    className={`px-2 py-1 cursor-pointer text-sm ${
+                      index === selectedAgentIndex
+                        ? "bg-gray-100 text-black"
+                        : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                    onClick={() => setSelectedAgentIndex(index)}
+                  >
+                    {agentAction.agent.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right side - Selected agent's action */}
+          <div className="w-2/3 pl-4 flex flex-col">
+            {selectedAgent ? (
+              <>
+                <div className="text-xs text-gray-500 mb-2 flex-shrink-0">
+                  ACTION FOR {selectedAgent.agent.name.toUpperCase()}
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  <div className="text-sm text-gray-800 leading-relaxed pr-2">
+                    {selectedAgent.action}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-gray-500">No agent selected</div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom status */}
+        <div className="mt-auto pt-4 border-t border-gray-500">
+          <div className="text-xs text-gray-500">
+            {isWorldGenerating ? (
+              <span className="animate-pulse">CALCULATING WORLD STATE...</span>
+            ) : (
+              "WORLD GENERATION COMPLETE"
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default AgentActionsModal;
+</file>
+
+<file path="app/GameStates.ts">
+import { GameState } from "./World";
+
+export const ForestGameStart: GameState = {
+  worldDescription: "",
+  history: [
+    {
+      world: [
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        [
+          "",
+          "<Valiant Knight> wants to defend everyone.",
+          "",
+          "tree",
+          "",
+          "",
+          "",
+          "",
+          "<Wizard> is here to play tricks on everyone and inject chaos into the scene.",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ],
+        ["", "", "", "tree", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "tree", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "tree", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "tree", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "tree", "", "", "", "tree", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "tree", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "tree", "", "", "", "", "", "", ""],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "<Lumberjack> wants to cut down trees",
+          "",
+          "",
+          "",
+        ],
+        [
+          "",
+          "",
+          "<Druid> wants to plant trees and protect them.",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "<Monster> wants to kill everyone!",
+          "",
+        ],
+        ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ],
+      legend: {},
+      cellToLegendMap: {},
+      description: "",
+    },
+  ],
+  agents: [
+    {
+      name: "Valiant Knight",
+      color: "red",
+      currentState: "<Valiant Knight> wants to defend everyone.",
+      privateHistory: [],
+    },
+    {
+      name: "Monster",
+      color: "red",
+      currentState: "<Monster> wants to kill everyone!",
+      privateHistory: [],
+    },
+    {
+      name: "Druid",
+      color: "red",
+      currentState: "<Druid> wants to plant trees and protect them.",
+      privateHistory: [],
+    },
+    {
+      name: "Lumberjack",
+      color: "red",
+      currentState: "<Lumberjack> wants to cut down trees",
+      privateHistory: [],
+    },
+    {
+      name: "Wizard",
+      color: "red",
+      currentState:
+        "<Wizard> is here to play tricks on everyone and inject chaos into the scene.",
+      privateHistory: [],
+    },
+  ],
+};
+</file>
+
+<file path="app/layout.tsx">
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+</file>
+
+<file path="components/ui/dialog.tsx">
+"use client"
+
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+
+function Dialog({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+}
+
+function DialogTrigger({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+}
+
+function DialogPortal({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Portal>) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+}
+
+function DialogClose({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+}
+
+function DialogOverlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+  return (
+    <DialogPrimitive.Overlay
+      data-slot="dialog-overlay"
+      className={cn(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function DialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  showCloseButton?: boolean
+}) {
+  return (
+    <DialogPortal data-slot="dialog-portal">
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        data-slot="dialog-content"
+        className={cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {showCloseButton && (
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  )
+}
+
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      {...props}
+    />
+  )
+}
+
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function DialogTitle({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Title>) {
+  return (
+    <DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn("text-lg leading-none font-semibold", className)}
+      {...props}
+    />
+  )
+}
+
+function DialogDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Description>) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn("text-muted-foreground text-sm", className)}
+      {...props}
+    />
+  )
+}
+
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+}
+</file>
+
+<file path="lib/utils.ts">
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+</file>
+
+<file path="public/file.svg">
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/vercel.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+</file>
+
+<file path="components.json">
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/globals.css",
+    "baseColor": "gray",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "iconLibrary": "lucide"
+}
+</file>
+
+<file path="eslint.config.mjs">
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+];
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+</file>
+
+<file path="postcss.config.mjs">
+const config = {
+  plugins: ["@tailwindcss/postcss"],
+};
+
+export default config;
+</file>
+
+<file path="README.md">
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+</file>
+
+<file path="app/Cell.tsx">
+import { getAgentName  } from "./OverlayTextarea";
+import { Agent } from "./World";
+
+// Cell component for individual grid cells
+interface CellProps {
+  content: string;
+  rowIndex: number;
+  colIndex: number;
+  onClick: (rowIndex: number, colIndex: number) => void;
+  loading: boolean;
+  className?: string;
+  loadingAgents: {agent: Agent, action: string}[] | null;
+}
+
+const Cell = ({ content, rowIndex, colIndex, onClick, className, loadingAgents ,loading}: CellProps) => {
+
+
+    let icon = '';
+    const isAgent = getAgentName(content) !== null;
+    if(isAgent){
+        icon = '@'
+    }
+    else if(content.length > 0) {
+        icon = '...';
+    }
+  return (
+    <button 
+      disabled={loading}
+      className={`w-10 h-10 border-[0.5px] border-gray-500 cursor-pointer hover:bg-gray-100 flex items-center justify-center ${className} ${loadingAgents === null && isAgent ? "animate-pulse" : ""}`}
+      onClick={() => onClick(rowIndex, colIndex)}
+    >
+        {icon}
+    </button>
+  );
+};
+
+export default Cell;
+</file>
+
+<file path="app/globals.css">
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.13 0.028 261.692);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.028 261.692);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.028 261.692);
+  --primary: oklch(0.21 0.034 264.665);
+  --primary-foreground: oklch(0.985 0.002 247.839);
+  --secondary: oklch(0.967 0.003 264.542);
+  --secondary-foreground: oklch(0.21 0.034 264.665);
+  --muted: oklch(0.967 0.003 264.542);
+  --muted-foreground: oklch(0.551 0.027 264.364);
+  --accent: oklch(0.967 0.003 264.542);
+  --accent-foreground: oklch(0.21 0.034 264.665);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.928 0.006 264.531);
+  --input: oklch(0.928 0.006 264.531);
+  --ring: oklch(0.707 0.022 261.325);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0.002 247.839);
+  --sidebar-foreground: oklch(0.13 0.028 261.692);
+  --sidebar-primary: oklch(0.21 0.034 264.665);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.967 0.003 264.542);
+  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
+  --sidebar-border: oklch(0.928 0.006 264.531);
+  --sidebar-ring: oklch(0.707 0.022 261.325);
+}
+
+.dark {
+  --background: oklch(0.13 0.028 261.692);
+  --foreground: oklch(0.985 0.002 247.839);
+  --card: oklch(0.21 0.034 264.665);
+  --card-foreground: oklch(0.985 0.002 247.839);
+  --popover: oklch(0.21 0.034 264.665);
+  --popover-foreground: oklch(0.985 0.002 247.839);
+  --primary: oklch(0.928 0.006 264.531);
+  --primary-foreground: oklch(0.21 0.034 264.665);
+  --secondary: oklch(0.278 0.033 256.848);
+  --secondary-foreground: oklch(0.985 0.002 247.839);
+  --muted: oklch(0.278 0.033 256.848);
+  --muted-foreground: oklch(0.707 0.022 261.325);
+  --accent: oklch(0.278 0.033 256.848);
+  --accent-foreground: oklch(0.985 0.002 247.839);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.21 0.034 264.665);
+  --sidebar-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.278 0.033 256.848);
+  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+</file>
+
+<file path="app/OverlayTextarea.tsx">
+'use client'
+import { useRef } from "react";
+
+// Trigger sequence constant - detects names in angle brackets like <Frat boy 1> or <Lizard King>
+export const TRIGGER_SEQUENCE = "<[^<>]+>";
+// Split content by trigger sequence to find matches
+export const splitAgents = (text: string) => {
+  const regex = new RegExp(`(${TRIGGER_SEQUENCE})`, "g");
+  return text.split(regex);
+};
+
+// Check if text matches the trigger pattern
+export const isAgent = (text: string) => {
+  const regex = new RegExp(`^${TRIGGER_SEQUENCE}$`);
+  return regex.test(text);
+};
+
+// Extract agent name from text (returns just the name without brackets)
+export const getAgentName = (text: string) => {
+  if (text.length === 0) return null;
+  
+  // Use a capturing group to extract just the name inside the brackets
+  const regex = new RegExp(`<([^<>]+)>`);
+  const match = text.match(regex);
+  
+  return match ? match[1] : null;
+};
+
+interface OverlayTextareaProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  rows?: number;
+  className?: string;
+}
+
+const OverlayTextarea = ({
+  value,
+  onChange,
+  placeholder,
+  rows = 3,
+  className = "",
+}: OverlayTextareaProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Sync scroll positions between textarea and overlay
+  const handleScroll = () => {
+    if (textareaRef.current && overlayRef.current) {
+      overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+      overlayRef.current.scrollLeft = textareaRef.current.scrollLeft;
+    }
+  };
+
+  // Render highlights by splitting content and styling matches
+  const renderHighlights = () => {
+    const parts = splitAgents(value);
+
+    return parts.map((part, index) => {
+      const matches = isAgent(part);
+      return (
+        <span
+          key={index}
+          className={
+            matches
+              ? "bg-red-100 border-red-800 text-red-800 outline-red-800 rounded"
+              : "opacity-0"
+          }
+        >
+          {part}
+        </span>
+      );
+    });
+  };
+
+  return (
+    <div className="relative">
+      {/* Overlay for highlighting */}
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 pointer-events-none z-10 whitespace-pre-wrap"
+        style={{
+          font: "inherit",
+          lineHeight: "inherit",
+          color: "transparent",
+          overflow: "hidden",
+        }}
+      >
+        {renderHighlights()}
+      </div>
+
+      {/* Actual textarea */}
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onScroll={handleScroll}
+        placeholder={placeholder}
+        rows={rows}
+        className={`relative z-0 bg-transparent ${className}`}
+        style={{
+          resize: "none",
+          outline: "none",
+        }}
+      />
+    </div>
+  );
+};
+
+export default OverlayTextarea;
+</file>
+
+<file path="app/World.ts">
+import { getAgentName } from "./OverlayTextarea";
+
+export type Grid = string[][];
+
+export interface Agent {
+  name: string;
+  color: string;
+  currentState: string;
+  location: {row: number, col: number};
+  privateHistory: {action: string, agentState: string, location: {row: number, col: number}}[];
+}
+
+export interface Legend {
+  [key: string]: string;
+}
+
+export interface CellToLegendMap {
+  [key: string]: string;
+}
+
+export interface TurnState {
+  world: Grid;
+  legend: Legend;
+  cellToLegendMap: CellToLegendMap;
+  description: string;
+}
+
+export interface GameState {
+  worldDescription: string;
+  history: TurnState[];
+  agents: Agent[];
+}
+
+export interface WorldChange {
+  row: number;
+  col: number;
+  newContent: string;
+}
+
+export interface WorldStateResponse {
+  changes: WorldChange[];
+  explanation: string;
+}
+
+export const initializeEmptyWorld = (rows: number, cols: number): Grid => {
+  return Array.from({ length: rows }, () => Array(cols).fill(""));
+};
+
+// Create a concise description of the world showing only non-empty cells
+export const getWorldDescription = (world: Grid): string => {
+  const nonEmptyCells: string[] = [];
+  
+  world.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      if (cell.trim() !== "") {
+        nonEmptyCells.push(`(${rowIndex},${colIndex}): ${cell}`);
+      }
+    });
+  });
+  
+  return nonEmptyCells.length > 0 
+    ? nonEmptyCells.join('\n') 
+    : "The world is empty.";
+};
+
+export const parseAgentsFromWorld = (
+  world: Grid,
+  existingAgents: Agent[]
+): Agent[] => {
+  // Find all agents in the world with their locations
+  const agentsInWorld: { name: string; state: string; location: {row: number, col: number} }[] = [];
+  
+  world.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      const agentName = getAgentName(cell);
+      if (agentName !== null) {
+        agentsInWorld.push({
+          name: agentName,
+          state: cell,
+          location: { row: rowIndex, col: colIndex }
+        });
+      }
+    });
+  });
+
+  const newAgents = agentsInWorld.filter(
+    (agent) => !existingAgents.some((a) => a.name === agent.name)
+  );
+
+  const removedAgents = existingAgents.filter(
+    (agent) => !agentsInWorld.some((a) => a.name === agent.name)
+  );
+
+  // Remove agents that are no longer in the world
+  existingAgents = existingAgents.filter(
+    (agent) => !removedAgents.some((a) => a.name === agent.name)
+  );
+
+  // Update existing agents with new state and location, and record history
+  existingAgents = existingAgents.map((agent) => {
+    const newAgent = agentsInWorld.find((a) => a.name === agent.name);
+    if (newAgent) {
+      return { ...agent, currentState: newAgent.state, location: {row: newAgent.location.row, col: newAgent.location.col} };
+    }
+    return agent;
+  });
+
+  // Add new agents with their location and empty history
+  const newAgentObjects: Agent[] = newAgents.map((agent) => ({
+    name: agent.name,
+    color: "red",
+    currentState: agent.state,
+    location: agent.location,
+    privateHistory: [],
+  }));
+
+  return [...existingAgents, ...newAgentObjects];
+};
+
+// Apply world changes to create a new grid
+const applyWorldChanges = (currentWorld: Grid, changes: WorldChange[]): Grid => {
+  // Create a deep copy of the current world
+  const newWorld = currentWorld.map(row => [...row]);
+  
+  // Apply each change
+  changes.forEach(change => {
+    if (change.row >= 0 && change.row < newWorld.length && 
+        change.col >= 0 && change.col < newWorld[0].length) {
+      newWorld[change.row][change.col] = change.newContent;
+    }
+  });
+  
+  return newWorld;
+};
+
+// Get next world state by calling the GPT-4 API
+const getNextWorldState = async (
+  currentWorld: Grid,
+  agentActions: string[],
+  worldDescription: string
+): Promise<WorldStateResponse> => {
+  try {
+    const response = await fetch("/api/world-state", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        world: currentWorld,
+        agentActions,
+        worldDescription,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const worldStateResponse: WorldStateResponse = await response.json();
+    return worldStateResponse;
+  } catch (error) {
+    console.error("Error getting next world state:", error);
+    return {
+      changes: [],
+      explanation: "No changes occurred this turn due to an error."
+    };
+  }
+};
+
+// Generate the next turn state based on agent actions
+export const getNextTurnState = async (
+  gameState: GameState,
+  setLoadingAgents: (agentActions: {agent: Agent, action: string}[] | null) => void
+): Promise<GameState> => {
+  const { worldDescription, history } = gameState;
+  const newAgents = parseAgentsFromWorld(
+    history[history.length - 1].world,
+    gameState.agents
+  );
+  gameState.agents = newAgents;
+  const { agents } = gameState;
+
+  const currentTurnState = history[history.length - 1];
+  const currentGrid = currentTurnState.world;
+
+  setLoadingAgents(null);
+  // Calculate actions for all agents
+  const agentActionStrings = await Promise.all(
+    agents.map((agent) =>
+      calculateAgentAction(agent, currentGrid, worldDescription)
+    )
+  );
+  
+  // Create agent action objects with agent and action
+  const agentActions = agents.map((agent, index) => ({
+    agent,
+    action: agentActionStrings[index]
+  }));
+  
+  setLoadingAgents(agentActions);
+  console.log("Agent actions:", agentActions);
+
+  // Get the next world state from GPT-4
+  const worldStateResponse = await getNextWorldState(
+    currentGrid,
+    agentActionStrings,
+    worldDescription
+  );
+  
+  console.log("World changes:", worldStateResponse);
+
+  // Apply the changes to create the new world
+  const newWorld = applyWorldChanges(currentGrid, worldStateResponse.changes);
+
+  // Create a new turn state with the updated world
+  const newTurnState: TurnState = {
+    world: newWorld,
+    legend: currentTurnState.legend,
+    cellToLegendMap: currentTurnState.cellToLegendMap,
+    description: worldStateResponse.explanation,
+  };
+
+  // Update agents based on the new world state
+  const updatedAgents = parseAgentsFromWorld(newWorld, agents);
+
+  return {
+    ...gameState,
+    history: [...history, newTurnState],
+    agents: updatedAgents,
+  };
+};
+
+// Calculate agent action by calling the GPT-4 API
+const calculateAgentAction = async (
+  agent: Agent,
+  world: Grid,
+  description: string
+): Promise<string> => {
+  try {
+    const response = await fetch("/api/agent-action", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agent,
+        world,
+        description,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // update agent's private history
+    agent.privateHistory.push({
+      action: data.action,
+      agentState: agent.currentState,
+      location: agent.location,
+    });
+    return data.action;
+  } catch (error) {
+    console.error("Error calculating agent action:", error);
+    return "The agent hesitates, unsure of what to do next.";
+  }
+};
+</file>
+
+<file path="package.json">
+{
+  "name": "gridworld",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-visually-hidden": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "next": "15.3.5",
+    "openai": "^5.8.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.5",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.5",
+    "typescript": "^5"
+  }
+}
+</file>
+
+<file path="app/api/world-state/route.ts">
+import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
+import { getWorldDescription } from "@/app/World";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Type for validating change objects
+interface ChangeObject {
+  row: unknown;
+  col: unknown;
+  newContent: unknown;
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { world, agentActions, worldDescription } = await request.json();
+
+    // Create a prompt for GPT-4 to generate the next world state
+    const prompt = `You are managing a text-based gridworld game. Your role is to determine how the world changes based on agent actions.
+
+World Description: ${worldDescription}
+
+Current World State:
+${getWorldDescription(world)}
+
+Agent Actions This Turn:
+${agentActions
+  .map((action: string, index: number) => `${index + 1}. ${action}`)
+  .join("\n")}
+
+Based on the agent actions, determine what changes should occur in the world. Consider:
+- How agents might move or interact with objects
+- What new objects or structures might be created
+- How existing objects might be modified or destroyed
+- Environmental changes that might occur. Remember, non-agent tiles can also create changes in the world!
+- How agents' states/conditions might change (injured, empowered, etc.)
+
+Remember, only one agent can occupy a cell at a time. DO NOT ALLOW MULTIPLE AGENTS TO OCCUPY THE SAME CELL. 
+
+IMPORTANT: You can change agent states by modifying their cell content on the board. For example:
+- "<Knight> is wounded" (if the knight gets injured)
+- "<Druid> is planting a tree" (if the druid starts an action)
+- "<Wizard> is casting a spell" (if the wizard begins magic)
+- Move agents to different cells by clearing their old position and placing them in a new one. Make sure to remove the agent's old location unless you are explicitly duplicating them!
+
+When updating agents, make sure you preserve their initial state and only add temporary statuses on - unless the changes are meant to be permanent.
+
+Agent states are derived from their board representation before each turn, so any changes you make to agent cells will update their current state.
+
+Respond with a JSON object containing the changes to apply to the world grid. Use this format:
+{
+  "changes": [
+    {
+      "row": number,
+      "col": number,
+      "newContent": "string description of new cell content"
+    }
+  ],
+  "explanation": "Brief explanation of what happened this turn"
+}
+
+Only include cells that actually change. Empty cells should have newContent as an empty string "".
+
+DO NOT ALLOW MULTIPLE AGENTS TO OCCUPY THE SAME CELL.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "o3", 
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that manages world state changes in a text-based game. Always respond with valid JSON in the exact format requested. Be logical and consistent with how agents interact with the world. You can modify agent states by changing their cell content on the board."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" }, // Force JSON response
+    });
+
+    const responseText = completion.choices[0]?.message?.content || "{}";
+    
+    // Parse the JSON response
+    let worldChanges;
+    try {
+      worldChanges = JSON.parse(responseText);
+      
+      // Validate the response structure
+      if (!worldChanges.changes || !Array.isArray(worldChanges.changes)) {
+        throw new Error("Invalid response structure: missing or invalid changes array");
+      }
+      
+      if (!worldChanges.explanation || typeof worldChanges.explanation !== 'string') {
+        worldChanges.explanation = "Changes occurred this turn.";
+      }
+      
+      // Validate each change object
+      worldChanges.changes = worldChanges.changes.filter((change: ChangeObject) => {
+        return typeof change.row === 'number' && 
+               typeof change.col === 'number' && 
+               typeof change.newContent === 'string';
+      });
+      
+    } catch (parseError) {
+      console.error("Failed to parse GPT-4 response:", parseError);
+      console.error("Response text:", responseText);
+      worldChanges = {
+        changes: [],
+        explanation: "No changes occurred this turn due to a parsing error."
+      };
+    }
+
+    return NextResponse.json(worldChanges);
+  } catch (error) {
+    console.error("Error calling OpenAI API:", error);
+    return NextResponse.json(
+      { error: "Failed to generate world state" },
+      { status: 500 }
+    );
+  }
+}
+</file>
+
+<file path="app/page.tsx">
+"use client";
+import { useState } from "react";
+import { GameState, getNextTurnState, parseAgentsFromWorld, Agent } from "./World";
+import Cell from "./Cell";
+import OverlayTextarea from "./OverlayTextarea";
+import AgentActionsModal from "./AgentActionsModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ForestGameStart } from "./GameStates";
+
+export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+
+  const [gameState, setGameState] = useState<GameState>(ForestGameStart);
+  const [loading, setLoading] = useState(false);
+  const [loadingAgents, setLoadingAgents] = useState<{agent: Agent, action: string}[] | null>(null);
+  const [isAgentActionsModalOpen, setIsAgentActionsModalOpen] = useState(false);
+
+  const grid = gameState.history[gameState.history.length - 1].world;
+
+  // Handle cell click to open modal
+  const handleCellClick = (rowIndex: number, colIndex: number) => {
+    setSelectedCell({ row: rowIndex, col: colIndex });
+    setIsModalOpen(true);
+  };
+
+  // Handle textarea change to update cell content
+  const handleCellContentChange = (newContent: string) => {
+    if (selectedCell) {
+      const newGrid = [...grid];
+      newGrid[selectedCell.row][selectedCell.col] = newContent;
+      gameState.history[gameState.history.length - 1].world = newGrid;
+      setGameState({
+        ...gameState,
+        agents: parseAgentsFromWorld(newGrid, gameState.agents),
+      });
+    }
+  };
+
+  return (
+    <div className="text-gray-500">
+      <div className="px-4 flex items-center border-b border-gray-500 sticky top-0 bg-white gap-2">
+        <h1 className="font-semibold">gridworld</h1>
+        <button
+          className="cursor-pointer disabled:opacity-50"
+          disabled={loading}
+          onClick={async () => {
+            setLoading(true);
+            setLoadingAgents(null); // Reset agent actions
+            setIsAgentActionsModalOpen(false); // Close modal if open
+            const nextTurnState = await getNextTurnState(
+              gameState,
+              (agentActions) => {
+                setLoadingAgents(agentActions);
+                if (agentActions) {
+                  setIsAgentActionsModalOpen(true); // Show modal when actions are ready
+                }
+              }
+            );
+            setGameState(nextTurnState);
+            setLoading(false);
+          }}
+        >
+          {!loading && "next turn"}
+          {loadingAgents === null && loading
+            ? "agents are plotting..."
+            : loading && "calculating world state..."}
+        </button>
+        <button
+          className="cursor-pointer disabled:opacity-50 ml-auto"
+          onClick={() => {
+            console.log(gameState);
+          }}
+        >
+          debug world state
+        </button>
+      </div>
+      <div className={`mx-auto w-fit mt-10 ${loading ? "opacity-50" : ""}`}>
+        {/* Header row with column labels */}
+        <div className="flex">
+          <div className="w-10 h-6"></div> {/* Empty corner */}
+          {grid[0].map((_, colIndex) => (
+            <div
+              key={colIndex}
+              className="w-10 h-6 text-sm text-gray-500 flex items-center justify-center"
+            >
+              {colIndex}
+            </div>
+          ))}
+        </div>
+
+        {/* Grid rows with row labels */}
+        <div className="flex">
+          {/* Row labels column */}
+          <div className="flex flex-col">
+            {grid.map((_, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="w-10 h-10 text-sm text-gray-500 flex items-center justify-center"
+              >
+                {rowIndex}
+              </div>
+            ))}
+          </div>
+
+          {/* Actual grid */}
+          <div className="border-[0.5px] border-gray-500">
+            {grid.map((row, rowIndex) => (
+              <div key={rowIndex} className="flex">
+                {row.map((cell, colIndex) => (
+                  <Cell
+                    key={colIndex}
+                    content={cell}
+                    rowIndex={rowIndex}
+                    colIndex={colIndex}
+                    onClick={handleCellClick}
+                    loading={loading}
+                    loadingAgents={loadingAgents}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Modal with custom styling */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="border border-black bg-white rounded-none h-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-sm font-normal text-gray-500">
+              CELL {selectedCell?.row}, {selectedCell?.col}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="mt-4">
+            {selectedCell && (
+              <div className="space-y-4">
+                <div>
+                  <OverlayTextarea
+                    value={grid[selectedCell.row][selectedCell.col]}
+                    onChange={handleCellContentChange}
+                    placeholder="Enter cell content..."
+                    rows={3}
+                    className="w-full border-none rounded-none resize-none border-t border-gray-500 p-0 h-[400px]"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Agent Actions Modal */}
+      <AgentActionsModal
+        isOpen={isAgentActionsModalOpen}
+        onClose={() => setIsAgentActionsModalOpen(false)}
+        agentActions={loadingAgents || []}
+        isWorldGenerating={loading && loadingAgents !== null}
+      />
+    </div>
+  );
+}
+</file>
+
+<file path="app/api/agent-action/route.ts">
+import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
+import { Agent, getWorldDescription } from "@/app/World";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const { agent, world, description } = await request.json();
+
+    // Create a prompt for GPT-4 to generate an agent action
+    const prompt = `You are an AI agent in a text-based gridworld game. Your role is to determine what action this agent should take.
+
+Remember, only one agent can occupy a cell at a time. DO NOT ALLOW MULTIPLE AGENTS TO OCCUPY THE SAME CELL. 
+Do not reference the rules of the world state, or the fact that the world is a grid.
+
+Agent Information:
+- Name: ${agent.name}
+- Color: ${agent.color}
+- Current State: ${agent.currentState}
+- Private History: ${(agent as Agent).privateHistory.map((entry)=>JSON.stringify(entry)).join(", ")}
+
+World Description: ${description}
+
+Current World State:
+${getWorldDescription(world)}
+
+Based on the agent's character, the current world state, and their private history, what action should ${agent.name} take next?
+
+Respond with a a paragraph on what the agent does, as well as their inner monologue. This should be a paragraph or two. Focus on what the agent would logically do given their personality and situation.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4.1", // Using GPT-4o as the latest model
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that generates realistic actions for agents in a text-based game world. Be concise and focused on character-appropriate actions."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      max_tokens: 1000,
+      temperature: 0.7,
+    });
+
+    const action = completion.choices[0]?.message?.content || "The agent considers their options.";
+
+    return NextResponse.json({ action });
+  } catch (error) {
+    console.error("Error calling OpenAI API:", error);
+    return NextResponse.json(
+      { error: "Failed to generate agent action" },
+      { status: 500 }
+    );
+  }
+}
+</file>
+
+</files>
