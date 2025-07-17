@@ -103,18 +103,30 @@ export default function Home() {
             ? "agents are plotting..."
             : loading && "calculating world state..."}
         </button>
-        <div className={!hasValidApiKey ? "opacity-50 pointer-events-none" : ""}>
+        <div
+          className={!hasValidApiKey ? "opacity-50 pointer-events-none" : ""}
+        >
           <StoryModal gameState={gameState} />
         </div>
-        <div className={!hasValidApiKey ? "opacity-50 pointer-events-none" : ""}>
+        <div
+          className={!hasValidApiKey ? "opacity-50 pointer-events-none" : ""}
+        >
           <ScenarioModal
             onScenarioGenerated={(newGameState) => {
               setGameState(newGameState);
             }}
           />
         </div>
+        <a
+          className="ml-auto"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/nichwch/gridworld"
+        >
+          fork on github
+        </a>
         <button
-          className={`cursor-pointer disabled:opacity-50 ml-auto ${
+          className={`cursor-pointer disabled:opacity-50 ${
             !hasValidApiKey ? "text-red-500 font-semibold" : ""
           }`}
           onClick={() => setIsSettingsOpen(true)}
@@ -123,12 +135,14 @@ export default function Home() {
         </button>
       </div>
       <div className="flex flex-row h-full">
-        <Sidebar 
-          agents={gameState.agents} 
+        <Sidebar
+          agents={gameState.agents}
           hoveredAgentName={hoveredAgentName}
           onAgentHover={setHoveredAgentName}
           worldDescription={gameState.worldDescription}
-          turnSummary={gameState.history[gameState.history.length - 1].description}
+          turnSummary={
+            gameState.history[gameState.history.length - 1].description
+          }
         />
         <div className={`mx-auto w-fit mt-10 ${loading ? "opacity-50" : ""}`}>
           {/* Header row with column labels */}
@@ -215,7 +229,6 @@ export default function Home() {
         onClose={() => setIsSettingsOpen(false)}
         onApiKeyChange={handleApiKeyChange}
       />
-
     </div>
   );
 }
